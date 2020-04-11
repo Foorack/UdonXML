@@ -2,13 +2,13 @@
 
 [![Discord](https://img.shields.io/badge/Discord-Discord%20Support-blueviolet?logo=discord)](https://discord.gg/7xJdWNk) - Feel free to join if you have any bugs or questions!
 
-## Setup
+## 🛠️ Setup
 
 ### Requirements
 
 * Unity 2018.4.20f1
 * VRCSDK3
-* [UdonSharp](https://github.com/Merlin-san/UdonSharp/blob/master/README.md)
+* Latest [UdonSharp](https://github.com/Merlin-san/UdonSharp/blob/master/README.md)
 
 ### Installation
 
@@ -51,13 +51,17 @@ public class UdonXMLTest : UdonSharpBehaviour
 
     public void Start()
     {
+		// Parse and store the root node
         var root = udonXml.LoadXml(EXAMPLE_DATA.ToCharArray());
 
+		// Fetch the first <books> node by index
         var books = udonXml.GetChildNode(root, 0);
 
+		// Loop over all children in the <books> node
         for (var bookNum = 0; bookNum != udonXml.GetChildNodesCount(books); bookNum++)
         {
             var book = udonXml.GetChildNode(books, bookNum);
+			// Fetch <title> and <price> nodes by tag name.
             var title = udonXml.GetChildNodeByName(book, "title");
             var price = udonXml.GetChildNodeByName(book, "price");
 
@@ -69,12 +73,12 @@ public class UdonXMLTest : UdonSharpBehaviour
 
 ![console output](https://i.imgur.com/g0e3ooO.png)
 
-## Documentation
+## 📄 Documentation
 
 ### Parsing
 
 
-#### LoadXml(char[] input
+#### 🔵 LoadXml(char[] input
 Loads an XML structure into memory by parsing a char[] provided input.
 
 Returns null in case of parse failure.
@@ -82,34 +86,34 @@ Returns null in case of parse failure.
 
 ### Reading data
 
-#### HasChildNodes(object data)
+#### 🔵 HasChildNodes(object data)
 Returns true if the node has child nodes.
 
-#### GetChildNodesCount(object data)
+#### 🔵 GetChildNodesCount(object data)
 Returns the number of children the current node has.
 
-#### GetChildNode(object data, int index)
+#### 🔵 GetChildNode(object data, int index)
 Returns the child node by the given index.
 
-#### GetChildNodeByName(object data, string nodeName)
+#### 🔵 GetChildNodeByName(object data, string nodeName)
 Returns the child node by the given name.
 
 If multiple nodes exists with the same type-name then the first one will be returned.
 
-#### GetNodeName(object data)
+#### 🔵 GetNodeName(object data)
 Returns the type-name of the node.
 
-#### GetNodeValue(object data)
+#### 🔵 GetNodeValue(object data)
 Returns the value of the node.
 
-#### HasAttribute(object data, string attrName)
+#### 🔵 HasAttribute(object data, string attrName)
 Returns whether the node has a given attribute or not.
 
-#### GetAttribute(object data, string attrName)
+#### 🔵 GetAttribute(object data, string attrName)
 Returns the value of the attribute by given name.
 
 
-## Roadmap
+## 🚛 Roadmap
 
 * Parsing from in-memory back to an XML document.
 * Allowing setting values and creating nodes.
