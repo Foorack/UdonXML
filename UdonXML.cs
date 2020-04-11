@@ -42,6 +42,21 @@ using UdonSharp;
 // ReSharper disable once InconsistentNaming
 public class UdonXML : UdonSharpBehaviour
 {
+    /**
+     * Data is stored internally in the following format:
+     *
+     * object[]{ 
+     *     0: "nodeName",
+     *     1: object[ // attributes
+     *  	    tagNames,
+     *  	    tagValue
+     *     ],
+     *     2: object[ //children
+     *  	    // self...
+     *     ]
+     *     3: "value"
+     * }
+     */
     private object[] GenerateEmptyStruct()
     {
         var emptyStruct = new object[4];
