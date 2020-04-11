@@ -2,6 +2,13 @@
 
 [![Discord](https://img.shields.io/badge/Discord-Discord%20Support-blueviolet?logo=discord)](https://discord.gg/7xJdWNk) - Feel free to join if you have any bugs or questions!
 
+UdonXML is an XML parser written in Udon for VRChat.
+The purpose of this project is for it to be used as an API in other bigger projects.
+This work is something the average VRChatter never will notice, but something the author hopes might be beneficial and make the life easier for world/game creators in VRChat.
+
+An example use of this library is allowing the player to paste the entire contents of an XML file (e.g. game save file) into an Input field in VRC, and allowing the world to then parse the submitted data.
+Work is currently undergoing on implementing a ZIP decoder for this same purpose, please join the Discord for notification on future updates.
+
 ## 🛠️ Setup
 
 ### Requirements
