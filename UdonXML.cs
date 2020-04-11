@@ -22,6 +22,14 @@
  * SOFTWARE.
  */
 
+/*
+ *     UdonXML
+ *
+ *     Version log:
+ *         0.1.0: 2020-04-11; Initial version, parsing capability.
+ * 
+ */
+
 #define NO_DEBUG
 // Remove NO_ to enable debug
 
