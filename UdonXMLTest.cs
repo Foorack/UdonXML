@@ -23,8 +23,6 @@
  */
 
 using UnityEngine;
-using VRC.SDKBase;
-using VRC.Udon;
 using UdonSharp;
 
 // ReSharper disable once InconsistentNaming

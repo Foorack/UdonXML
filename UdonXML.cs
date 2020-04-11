@@ -383,6 +383,7 @@ public class UdonXML : UdonSharpBehaviour
 
     /**
      * Returns the child node by the given name.
+     * 
      * If multiple nodes exists with the same type-name then the first one will be returned.
      */
     public object GetChildNodeByName(object data, string nodeName)
