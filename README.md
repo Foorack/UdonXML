@@ -84,7 +84,7 @@ public class UdonXMLTest : UdonSharpBehaviour
 
 ### Loading
 
-#### 🔵 object LoadXml(string input)
+#### 🟣 object LoadXml(string input)
 Loads an XML structure into memory by parsing the provided input.
 
 Returns null in case of parse failure.
@@ -92,12 +92,12 @@ Returns null in case of parse failure.
 
 ### Saving
 
-#### 🔵 string SaveXml(object data)
+#### 🟤 string SaveXml(object data)
 Saves the stored XML structure in memory to an XML document.
 
 Uses default indent of 4 spaces. Use `SaveXmlWithIdent` to override.
 
-#### 🔵 string SaveXmlWithIdent(object data, string indent)
+#### 🟤 string SaveXmlWithIdent(object data, string indent)
 Saves the stored XML structure in memory to an XML document with given indentation.
 
 
