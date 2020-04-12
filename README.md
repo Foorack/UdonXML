@@ -82,7 +82,7 @@ public class UdonXMLTest : UdonSharpBehaviour
 
 ## 📄 Documentation
 
-### Loading
+### Loading data
 
 #### 🟣 object LoadXml(string input)
 Loads an XML structure into memory by parsing the provided input.
@@ -90,7 +90,7 @@ Loads an XML structure into memory by parsing the provided input.
 Returns null in case of parse failure.
 
 
-### Saving
+### Saving data
 
 #### 🟤 string SaveXml(object data)
 Saves the stored XML structure in memory to an XML document.
