@@ -557,19 +557,41 @@ public class UdonXMLTest : UdonSharpBehaviour
   </TreeItem>
 </ManagedTreeData>";
 
+    private string EXAMPLE_DATA_4 = @"<!DOCTYPE html>
+<html>
+  <body>
+    <h1>My First Heading</h1>
+    <p>My first paragraph.</p>
+  </body>
+</html>
+";
+
     public void Start()
     {
-        var root = udonXml.LoadXml(EXAMPLE_DATA_2.ToCharArray());
+        var root = udonXml.LoadXml(EXAMPLE_DATA_4.ToCharArray());
 
-        var books = udonXml.GetChildNode(root, 0);
-
-        for (var bookNum = 0; bookNum != udonXml.GetChildNodesCount(books); bookNum++)
+        if (root == null)
         {
-            var book = udonXml.GetChildNode(books, bookNum);
-            var title = udonXml.GetChildNodeByName(book, "title");
-            var price = udonXml.GetChildNodeByName(book, "price");
+            Debug.Log("ROOT WAS NULL!!");
+            return;
+        }
 
-            Debug.Log("title: " + udonXml.GetNodeValue(title) + " price: " + udonXml.GetNodeValue(price));
+        for (var i1 = 0; i1 != udonXml.GetChildNodesCount(root); i1++)
+        {
+            var level1 = udonXml.GetChildNode(root, i1);
+            Debug.Log("name: " + udonXml.GetNodeName(level1) + " children: " + udonXml.GetChildNodesCount(level1));
+            for (var i2 = 0; i2 != udonXml.GetChildNodesCount(level1); i2++)
+            {
+                var level2 = udonXml.GetChildNode(level1, i2);
+                Debug.Log("  name: " + udonXml.GetNodeName(level2) + " children: " +
+                          udonXml.GetChildNodesCount(level2));
+                for (var i3 = 0; i3 != udonXml.GetChildNodesCount(level2); i3++)
+                {
+                    var level3 = udonXml.GetChildNode(level2, i3);
+                    Debug.Log("    name: " + udonXml.GetNodeName(level3) + " children: " +
+                              udonXml.GetChildNodesCount(level3) + " value: " + udonXml.GetNodeValue(level3));
+                }
+            }
         }
     }
 }

@@ -62,7 +62,7 @@ public class UdonXMLTest : UdonSharpBehaviour
         var root = udonXml.LoadXml(EXAMPLE_DATA.ToCharArray());
 
 		// Fetch the first <books> node by index
-        var books = udonXml.GetChildNode(root, 0);
+        var books = udonXml.GetChildNode(root, 1); // Index 0 will be <?xml> tag
 
 		// Loop over all children in the <books> node
         for (var bookNum = 0; bookNum != udonXml.GetChildNodesCount(books); bookNum++)

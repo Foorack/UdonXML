@@ -27,6 +27,7 @@
  *
  *     Version log:
  *         0.1.0: 2020-04-11; Initial version, parsing capability.
+ *         0.1.1: 2020-04-12; Added support for !DOCTYPE, thereby allowing HTML to be parsed.
  * 
  */
 
@@ -219,7 +220,7 @@ public class UdonXML : UdonSharpBehaviour
                 }
                 else
                 {
-                    if (c == '?')
+                    if (c == '?' || c == '!')
                     {
                         isSpecialData = true;
                     }
@@ -264,33 +265,32 @@ public class UdonXML : UdonSharpBehaviour
                         hasTagSplitOccured = false;
                     }
 
-                    if (!isSpecialData)
+                    object[] s = FindCurrentLevel(data, position);
+                    position = AddToIntegerArray(position, ((object[]) s[2]).Length);
+
+                    s[2] = AddToObjectArray((object[]) s[2], GenerateEmptyStruct());
+                    object[] children = (object[]) s[2];
+                    object[] child = (object[]) children[children.Length - 1];
+
+                    child[0] = nodeName;
+                    object[] attr = (object[]) child[1];
+                    attr[0] = tagNames;
+                    attr[1] = tagValues;
+
+                    if (isSelfClosingNode || isSpecialData)
                     {
-                        object[] s = FindCurrentLevel(data, position);
-                        position = AddToIntegerArray(position, ((object[]) s[2]).Length);
-
-                        s[2] = AddToObjectArray((object[]) s[2], GenerateEmptyStruct());
-                        object[] children = (object[]) s[2];
-                        object[] child = (object[]) children[children.Length - 1];
-
-                        child[0] = nodeName;
-                        object[] attr = (object[]) child[1];
-                        attr[0] = tagNames;
-                        attr[1] = tagValues;
-
-                        if (isSelfClosingNode)
-                        {
-                            position = RemoveLastIntegerArray(position);
+                        position = RemoveLastIntegerArray(position);
 #if DEBUG
-                            Debug.Log("SELF-CLOSED TAG : " + nodeName);
+                        Debug.Log("SELF-CLOSED TAG : " + nodeName);
 #endif
-                        }
-                        else
-                        {
-                            level++;
-                        }
+                    }
+
+                    if (!isSelfClosingNode && !isSpecialData)
+                    {
+                        level++;
                     }
                 }
+
                 else if (c == '/' && !isWithinQuotes)
                 {
                     isSelfClosingNode = true;
@@ -344,6 +344,7 @@ public class UdonXML : UdonSharpBehaviour
             }
         }
 
+        Debug.Log("Level after parsing: " + level);
         return level != 0 ? null : data;
     }
 
