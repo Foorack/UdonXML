@@ -27,7 +27,7 @@ Work is currently undergoing on implementing a ZIP decoder for this same purpose
 
 1. Declare a `public UdonXML udonXml;` variable in your program.
 2. Assign it the value of the UdonXML GameObject in your scene.
-3. Parse your XML data with LoadXml `udonXml.LoadXml(inputData.ToCharArray());`. It will return an object. Notice it takes a char[] and not a string as input, so ToCharArray is required.
+3. Parse your XML data with LoadXml `udonXml.LoadXml(inputData);`. It will return an object.
 4. The object returned represents the root of the xml tree, use it when executing other nodes such as `GetNodeName` or `HasChildNodes`.
 
 ### Example demo
@@ -59,7 +59,7 @@ public class UdonXMLTest : UdonSharpBehaviour
     public void Start()
     {
 		// Parse and store the root node
-        var root = udonXml.LoadXml(EXAMPLE_DATA.ToCharArray());
+        var root = udonXml.LoadXml(EXAMPLE_DATA);
 
 		// Fetch the first <books> node by index
         var books = udonXml.GetChildNode(root, 1); // Index 0 will be <?xml> tag
@@ -82,41 +82,51 @@ public class UdonXMLTest : UdonSharpBehaviour
 
 ## 📄 Documentation
 
-### Parsing
+### Loading
 
-
-#### 🔵 LoadXml(char[] input
-Loads an XML structure into memory by parsing a char[] provided input.
+#### 🔵 object LoadXml(string input)
+Loads an XML structure into memory by parsing the provided input.
 
 Returns null in case of parse failure.
 
 
+### Saving
+
+#### 🔵 string SaveXml(object data)
+Saves the stored XML structure in memory to an XML document.
+
+Uses default indent of 4 spaces. Use `SaveXmlWithIdent` to override.
+
+#### 🔵 string SaveXmlWithIdent(object data, string indent)
+Saves the stored XML structure in memory to an XML document with given indentation.
+
+
 ### Reading data
 
-#### 🔵 HasChildNodes(object data)
+#### 🔵 bool HasChildNodes(object data)
 Returns true if the node has child nodes.
 
-#### 🔵 GetChildNodesCount(object data)
+#### 🔵 int GetChildNodesCount(object data)
 Returns the number of children the current node has.
 
-#### 🔵 GetChildNode(object data, int index)
+#### 🔵 object GetChildNode(object data, int index)
 Returns the child node by the given index.
 
-#### 🔵 GetChildNodeByName(object data, string nodeName)
+#### 🔵 object GetChildNodeByName(object data, string nodeName)
 Returns the child node by the given name.
 
 If multiple nodes exists with the same type-name then the first one will be returned.
 
-#### 🔵 GetNodeName(object data)
+#### 🔵 string GetNodeName(object data)
 Returns the type-name of the node.
 
-#### 🔵 GetNodeValue(object data)
+#### 🔵 string GetNodeValue(object data)
 Returns the value of the node.
 
-#### 🔵 HasAttribute(object data, string attrName)
+#### 🔵 bool HasAttribute(object data, string attrName)
 Returns whether the node has a given attribute or not.
 
-#### 🔵 GetAttribute(object data, string attrName)
+#### 🔵 string GetAttribute(object data, string attrName)
 Returns the value of the attribute by given name.
 
 

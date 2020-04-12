@@ -35,20 +35,20 @@ public class UdonXMLTest : UdonSharpBehaviour
     <user name=""Jane Doe"" age=""39"" />
 </users>";
 
-    private string EXAMPLE_DATA_2 = @"<?xml version=""1.0"" encoding=""utf-8""?>  
-<books xmlns=""http://www.contoso.com/books"">  
-    <book genre=""novel"" ISBN=""1-861001-57-8"" publicationdate=""1823-01-28"">  
-        <title>Pride And Prejudice</title>  
-        <price>24.95</price>  
+    private string EXAMPLE_DATA_2 = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<books xmlns=""http://www.contoso.com/books"">
+    <book genre=""novel"" ISBN=""1-861001-57-8"" publicationdate=""1823-01-28"">
+        <title>Pride And Prejudice</title>
+        <price>24.95</price>
     </book>
-    <book genre=""novel"" ISBN=""1-861002-30-1"" publicationdate=""1985-01-01"">  
-        <title>The Handmaid's Tale</title>  
-        <price>29.95</price>  
-    </book>  
-    <book genre=""novel"" ISBN=""1-861001-45-3"" publicationdate=""1811-01-01"">  
-        <title>Sense and Sensibility</title>  
-        <price>19.95</price>  
-    </book>  
+    <book genre=""novel"" ISBN=""1-861002-30-1"" publicationdate=""1985-01-01"">
+        <title>The Handmaid's Tale</title>
+        <price>29.95</price>
+    </book>
+    <book genre=""novel"" ISBN=""1-861001-45-3"" publicationdate=""1811-01-01"">
+        <title>Sense and Sensibility</title>
+        <price>19.95</price>
+    </book>
 </books>";
 
     private string EXAMPLE_DATA_3 = @"<ManagedTreeData Version=""1"">
@@ -566,17 +566,46 @@ public class UdonXMLTest : UdonSharpBehaviour
 </html>
 ";
 
+    private string EXAMPLE_DATA_5 = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+<w:document xmlns:w=""http://schemas.openxmlformats.org/wordprocessingml/2006/main"" xmlns:m=""http://schemas.openxmlformats.org/officeDocument/2006/math"" xmlns:mc=""http://schemas.openxmlformats.org/markup-compatibility/2006"" xmlns:o=""urn:schemas-microsoft-com:office:office"" xmlns:r=""http://schemas.openxmlformats.org/officeDocument/2006/relationships"" xmlns:v=""urn:schemas-microsoft-com:vml"" xmlns:w10=""urn:schemas-microsoft-com:office:word"" xmlns:w14=""http://schemas.microsoft.com/office/word/2010/wordml"" xmlns:w15=""http://schemas.microsoft.com/office/word/2012/wordml"" xmlns:wne=""http://schemas.microsoft.com/office/word/2006/wordml"" xmlns:wp=""http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"" xmlns:wp14=""http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"" xmlns:wpc=""http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"" xmlns:wpg=""http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"" xmlns:wpi=""http://schemas.microsoft.com/office/word/2010/wordprocessingInk"" xmlns:wps=""http://schemas.microsoft.com/office/word/2010/wordprocessingShape"" xmlns:wpsCustomData=""http://www.wps.cn/officeDocument/2013/wpsCustomData"" mc:Ignorable=""w14 w15 wp14"">
+   <w:body>
+      <w:p>
+         <w:pPr>
+            <w:rPr>
+               <w:rFonts w:hint=""default"" />
+               <w:lang w:val=""sv-SE"" />
+            </w:rPr>
+         </w:pPr>
+         <w:r>
+            <w:rPr>
+               <w:rFonts w:hint=""default"" />
+               <w:lang w:val=""sv-SE"" />
+            </w:rPr>
+            <w:t>Hello worlds.</w:t>
+         </w:r>
+         <w:bookmarkStart w:id=""0"" w:name=""_GoBack"" />
+         <w:bookmarkEnd w:id=""0"" />
+      </w:p>
+      <w:sectPr>
+         <w:pgSz w:w=""11906"" w:h=""16838"" />
+         <w:pgMar w:top=""1440"" w:right=""1800"" w:bottom=""1440"" w:left=""1800"" w:header=""720"" w:footer=""720"" w:gutter=""0"" />
+         <w:cols w:space=""720"" w:num=""1"" />
+         <w:docGrid w:linePitch=""360"" w:charSpace=""0"" />
+      </w:sectPr>
+   </w:body>
+</w:document>";
+
     public void Start()
     {
-        var root = udonXml.LoadXml(EXAMPLE_DATA_4.ToCharArray());
+        var root = udonXml.LoadXml(EXAMPLE_DATA_5);
 
         if (root == null)
         {
             Debug.Log("ROOT WAS NULL!!");
             return;
         }
-
-        for (var i1 = 0; i1 != udonXml.GetChildNodesCount(root); i1++)
+        
+        /*for (var i1 = 0; i1 != udonXml.GetChildNodesCount(root); i1++)
         {
             var level1 = udonXml.GetChildNode(root, i1);
             Debug.Log("name: " + udonXml.GetNodeName(level1) + " children: " + udonXml.GetChildNodesCount(level1));
@@ -592,6 +621,8 @@ public class UdonXMLTest : UdonSharpBehaviour
                               udonXml.GetChildNodesCount(level3) + " value: " + udonXml.GetNodeValue(level3));
                 }
             }
-        }
+        }*/
+
+        Debug.Log(udonXml.SaveXml(root));
     }
 }

@@ -28,6 +28,7 @@
  *     Version log:
  *         0.1.0: 2020-04-11; Initial version, parsing capability.
  *         0.1.1: 2020-04-12; Added support for !DOCTYPE, thereby allowing HTML to be parsed.
+ *         0.1.2: 2020-04-12; Many parsing issues fixed. Now possible to export XML data.
  * 
  */
 
@@ -72,7 +73,7 @@ public class UdonXML : UdonSharpBehaviour
         return emptyStruct;
     }
 
-    private string[] AddToStringArray(string[] a, string b)
+    private string[] AddLastToStringArray(string[] a, string b)
     {
         string[] n = new string[a.Length + 1];
         for (int i = 0; i != a.Length; i++)
@@ -84,7 +85,19 @@ public class UdonXML : UdonSharpBehaviour
         return n;
     }
 
-    private object[] AddToObjectArray(object[] a, object b)
+    private object[] AddFirstToObjectArray(object[] a, object b)
+    {
+        object[] n = new object[a.Length + 1];
+        for (int i = 0; i != a.Length; i++)
+        {
+            n[i + 1] = a[i];
+        }
+
+        n[0] = b;
+        return n;
+    }
+
+    private object[] AddLastToObjectArray(object[] a, object b)
     {
         object[] n = new object[a.Length + 1];
         for (int i = 0; i != a.Length; i++)
@@ -96,7 +109,18 @@ public class UdonXML : UdonSharpBehaviour
         return n;
     }
 
-    private int[] AddToIntegerArray(int[] a, int b)
+    private object[] RemoveFirstObjectArray(object[] a)
+    {
+        object[] n = new object[a.Length - 1];
+        for (int i = 0; i != a.Length - 1; i++)
+        {
+            n[i] = a[i + 1];
+        }
+
+        return n;
+    }
+
+    private int[] AddLastToIntegerArray(int[] a, int b)
     {
         int[] n = new int[a.Length + 1];
         for (int i = 0; i != a.Length; i++)
@@ -254,21 +278,13 @@ public class UdonXML : UdonSharpBehaviour
                     Debug.Log("OPENED TAG : " + nodeName);
 #endif
                     state = 0;
-
-                    // Add tag
-                    if (tagName.Trim().Length != 0)
-                    {
-                        tagNames = AddToStringArray(tagNames, tagName);
-                        tagValues = AddToStringArray(tagValues, tagValue);
-                        tagName = "";
-                        tagValue = "";
-                        hasTagSplitOccured = false;
-                    }
+                    tagName = "";
+                    tagValue = "";
 
                     object[] s = FindCurrentLevel(data, position);
-                    position = AddToIntegerArray(position, ((object[]) s[2]).Length);
+                    position = AddLastToIntegerArray(position, ((object[]) s[2]).Length);
 
-                    s[2] = AddToObjectArray((object[]) s[2], GenerateEmptyStruct());
+                    s[2] = AddLastToObjectArray((object[]) s[2], GenerateEmptyStruct());
                     object[] children = (object[]) s[2];
                     object[] child = (object[]) children[children.Length - 1];
 
@@ -297,26 +313,20 @@ public class UdonXML : UdonSharpBehaviour
                 }
                 else if (c == '"')
                 {
-                    isWithinQuotes = !isWithinQuotes;
-                }
-                else if (c == ' ')
-                {
-                    if (!hasNodeNameEnded)
-                    {
-                        hasNodeNameEnded = true;
-                    }
-                    else
+                    if (isWithinQuotes)
                     {
                         // Add tag
                         if (tagName.Trim().Length != 0)
                         {
-                            tagNames = AddToStringArray(tagNames, tagName);
-                            tagValues = AddToStringArray(tagValues, tagValue);
+                            tagNames = AddLastToStringArray(tagNames, tagName.Trim());
+                            tagValues = AddLastToStringArray(tagValues, tagValue);
                             tagName = "";
                             tagValue = "";
                             hasTagSplitOccured = false;
                         }
                     }
+
+                    isWithinQuotes = !isWithinQuotes;
                 }
                 else if (c == '=' && !isWithinQuotes)
                 {
@@ -324,6 +334,11 @@ public class UdonXML : UdonSharpBehaviour
                 }
                 else
                 {
+                    if (c == ' ' && !hasNodeNameEnded)
+                    {
+                        hasNodeNameEnded = true;
+                    }
+
                     if (hasNodeNameEnded)
                     {
                         // if tag name or tag value
@@ -344,18 +359,139 @@ public class UdonXML : UdonSharpBehaviour
             }
         }
 
+#if DEBUG
         Debug.Log("Level after parsing: " + level);
+#endif
         return level != 0 ? null : data;
     }
 
+    private string Serialize(object[] data, string padding)
+    {
+        string output = "";
+
+        object[] work = new object[0];
+        var current = data;
+
+        var nodeChildren = (object[]) current[2];
+        // Add all current children
+        foreach (object o in nodeChildren)
+        {
+            work = AddLastToObjectArray(work, new object[] {o, 0});
+        }
+
+        string nodeName, nodeValue, tagList;
+        object[] node, nodeTags, tagNames, tagValues;
+        int level;
+        object[] tempData;
+
+        while (work.Length != 0)
+        {
+            current = (object[]) work[0];
+            node = (object[]) current[0];
+            level = (int) current[1];
+            work = RemoveFirstObjectArray(work);
+            nodeName = (string) node[0];
+            nodeTags = (object[]) node[1];
+            tagNames = (object[]) nodeTags[0];
+            tagValues = (object[]) nodeTags[1];
+            nodeChildren = (object[]) node[2];
+            nodeValue = (string) node[3];
+#if DEBUG
+            Debug.Log("[UdonXML] [Save] Work: " + nodeName + " " + level);
+#endif
+
+            // Add newline if not first line
+            if (output.Length != 0)
+            {
+                output += "\n";
+            }
+
+            // Add indentation
+            for (int i = 0; i != level; i++)
+            {
+                output += padding;
+            }
+
+            // Compile tags list
+            tagList = "";
+            for (int i = 0; i != tagNames.Length; i++)
+            {
+                tagList += " " + tagNames[i] + "=\"" + tagValues[i] + "\"";
+            }
+
+            if (nodeChildren.Length == 0)
+            {
+                if (nodeValue.Trim().Length == 0)
+                {
+                    if (nodeName == "?xml")
+                    {
+                        output += $"<{nodeName}{tagList}?>"; // ?xml has an extra ? at the end
+                    }
+                    else if (nodeName == "!DOCTYPE")
+                    {
+                        output += $"<{nodeName}{tagList}>"; // doc types are self closing without the usual slash
+                    }
+                    else
+                    {
+                        output += $"<{nodeName}{tagList} />";
+                    }
+                }
+                else
+                {
+                    output += $"<{nodeName}{tagList}>{nodeValue}</{nodeName}>";
+                }
+            }
+            else
+            {
+                output += $"<{nodeName}{tagList}>";
+                if (nodeChildren[0] != null)
+                {
+                    tempData = GenerateEmptyStruct();
+                    tempData[0] = "/" + nodeName;
+                    tempData[2] = new object[] {null};
+                    work = AddFirstToObjectArray(work, new object[] {tempData, level});
+                }
+            }
+
+            // Add all current children
+            for (int i = nodeChildren.Length - 1; i >= 0; i--)
+            {
+                var o = nodeChildren[i];
+                if (o != null)
+                {
+                    work = AddFirstToObjectArray(work, new object[] {o, level + 1});
+                }
+            }
+        }
+
+        return output;
+    }
+
     /**
-     * Loads an XML structure into memory by parsing a char[] provided input.
+     * Loads an XML structure into memory by parsing the provided input.
      *
      * Returns null in case of parse failure.
      */
-    public object LoadXml(char[] input)
+    public object LoadXml(string input)
     {
-        return Parse(input);
+        return Parse(input.ToCharArray());
+    }
+
+    /**
+     * Saves the stored XML structure in memory to an XML document.
+     * Uses default indent of 4 spaces. Use `SaveXmlWithIdent` to override.
+     */
+    public string SaveXml(object data)
+    {
+        return SaveXmlWithIdent(data, "    ");
+    }
+
+    /**
+     * Saves the stored XML structure in memory to an XML document with given indentation.
+     */
+    public string SaveXmlWithIdent(object data, string indent)
+    {
+        return Serialize((object[]) data, indent);
     }
 
     /**
