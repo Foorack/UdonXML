@@ -166,9 +166,9 @@ Returns true if attribute was deleted, false if it did not exist.
 
 ## 🚛 Roadmap
 
-* Parsing from in-memory back to an XML document.
-* Allowing setting values and creating nodes.
+* ~~Parsing from in-memory back to an XML document.~~
+* ~~Allowing setting values and creating nodes.~~
 * Improve error detection / make it stricter. Right now it allows closing tag to have a different name from opening tag, and only goes by level depth.
-* Add support for DOCTYPE and storing the ?xml declaration.
+* ~~Add support for DOCTYPE and storing the ?xml declaration.~~
 
 Functionality of validating an XML document's compliance against an XML Schema is very far-reach and out-of-scope for the foreseeable future.
