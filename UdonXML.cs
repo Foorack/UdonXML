@@ -29,6 +29,7 @@
  *         0.1.0: 2020-04-11; Initial version, parsing capability.
  *         0.1.1: 2020-04-12; Added support for !DOCTYPE, thereby allowing HTML to be parsed.
  *         0.1.2: 2020-04-12; Many parsing issues fixed. Now possible to export XML data.
+ *         0.1.3: 2020-04-12; Added ability to change values and create/delete attributes and child nodes.
  * 
  */
 
