@@ -58,17 +58,17 @@ public class UdonXMLTest : UdonSharpBehaviour
 
     public void Start()
     {
-		// Parse and store the root node
+        // Parse and store the root node
         var root = udonXml.LoadXml(EXAMPLE_DATA);
 
-		// Fetch the first <books> node by index
+        // Fetch the first <books> node by index
         var books = udonXml.GetChildNode(root, 1); // Index 0 will be <?xml> tag
 
-		// Loop over all children in the <books> node
+        // Loop over all children in the <books> node
         for (var bookNum = 0; bookNum != udonXml.GetChildNodesCount(books); bookNum++)
         {
             var book = udonXml.GetChildNode(books, bookNum);
-			// Fetch <title> and <price> nodes by tag name.
+            // Fetch <title> and <price> nodes by tag name.
             var title = udonXml.GetChildNodeByName(book, "title");
             var price = udonXml.GetChildNodeByName(book, "price");
 
