@@ -38,6 +38,7 @@
 using UnityEngine;
 using UdonSharp;
 
+// ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBeMadeStatic.Global
 // ReSharper disable SuggestBaseTypeForParameter
@@ -75,8 +76,8 @@ public class UdonXML : UdonSharpBehaviour
 
     private string[] AddLastToStringArray(string[] a, string b)
     {
-        string[] n = new string[a.Length + 1];
-        for (int i = 0; i != a.Length; i++)
+        var n = new string[a.Length + 1];
+        for (var i = 0; i != a.Length; i++)
         {
             n[i] = a[i];
         }
@@ -85,10 +86,26 @@ public class UdonXML : UdonSharpBehaviour
         return n;
     }
 
+    private string[] RemoveIndexStringArray(string[] a, int index)
+    {
+        var n = new string[a.Length - 1];
+        for (var i = 0; i < index; i++)
+        {
+            n[i] = a[i];
+        }
+
+        for (var i = index + 1; i != a.Length - 1; i++)
+        {
+            n[i - 1] = a[i];
+        }
+
+        return n;
+    }
+
     private object[] AddFirstToObjectArray(object[] a, object b)
     {
-        object[] n = new object[a.Length + 1];
-        for (int i = 0; i != a.Length; i++)
+        var n = new object[a.Length + 1];
+        for (var i = 0; i != a.Length; i++)
         {
             n[i + 1] = a[i];
         }
@@ -99,8 +116,8 @@ public class UdonXML : UdonSharpBehaviour
 
     private object[] AddLastToObjectArray(object[] a, object b)
     {
-        object[] n = new object[a.Length + 1];
-        for (int i = 0; i != a.Length; i++)
+        var n = new object[a.Length + 1];
+        for (var i = 0; i != a.Length; i++)
         {
             n[i] = a[i];
         }
@@ -111,8 +128,8 @@ public class UdonXML : UdonSharpBehaviour
 
     private object[] RemoveFirstObjectArray(object[] a)
     {
-        object[] n = new object[a.Length - 1];
-        for (int i = 0; i != a.Length - 1; i++)
+        var n = new object[a.Length - 1];
+        for (var i = 0; i != a.Length - 1; i++)
         {
             n[i] = a[i + 1];
         }
@@ -120,10 +137,26 @@ public class UdonXML : UdonSharpBehaviour
         return n;
     }
 
+    private object[] RemoveIndexObjectArray(object[] a, int index)
+    {
+        var n = new object[a.Length - 1];
+        for (var i = 0; i < index; i++)
+        {
+            n[i] = a[i];
+        }
+
+        for (var i = index + 1; i != a.Length - 1; i++)
+        {
+            n[i - 1] = a[i];
+        }
+
+        return n;
+    }
+
     private int[] AddLastToIntegerArray(int[] a, int b)
     {
-        int[] n = new int[a.Length + 1];
-        for (int i = 0; i != a.Length; i++)
+        var n = new int[a.Length + 1];
+        for (var i = 0; i != a.Length; i++)
         {
             n[i] = a[i];
         }
@@ -134,8 +167,8 @@ public class UdonXML : UdonSharpBehaviour
 
     private int[] RemoveFirstIntegerArray(int[] a)
     {
-        int[] n = new int[a.Length - 1];
-        for (int i = 0; i != a.Length - 1; i++)
+        var n = new int[a.Length - 1];
+        for (var i = 0; i != a.Length - 1; i++)
         {
             n[i] = a[i + 1];
         }
@@ -145,8 +178,8 @@ public class UdonXML : UdonSharpBehaviour
 
     private int[] RemoveLastIntegerArray(int[] a)
     {
-        int[] n = new int[a.Length - 1];
-        for (int i = 0; i != a.Length - 1; i++)
+        var n = new int[a.Length - 1];
+        for (var i = 0; i != a.Length - 1; i++)
         {
             n[i] = a[i];
         }
@@ -161,7 +194,7 @@ public class UdonXML : UdonSharpBehaviour
             return data;
         }
 
-        object[] current = data;
+        var current = data;
 
 #if DEBUG
         Debug.Log("FCL Start");
@@ -182,28 +215,27 @@ public class UdonXML : UdonSharpBehaviour
 
     private object[] Parse(char[] input)
     {
-        int state = 0;
-        int level = 0;
-        bool isSpecialData = false;
-        bool isWithinQuotes = false;
-        bool isSelfClosingNode = false;
-        bool hasNodeNameEnded = false;
-        bool hasTagSplitOccured = false; // means the = between the name and the value
+        var state = 0;
+        var level = 0;
+        var isSpecialData = false;
+        var isWithinQuotes = false;
+        var isSelfClosingNode = false;
+        var hasNodeNameEnded = false;
+        var hasTagSplitOccured = false; // means the = between the name and the value
 
-        object[] data = GenerateEmptyStruct();
+        var data = GenerateEmptyStruct();
         data[0] = "UdonXMLRoot";
 
         // Position to know where we are in the tree.
-        int[] position = new int[0];
+        var position = new int[0];
 
-        string nodeName = "";
-        string tagName = "";
-        string tagValue = "";
-        string[] tagNames = new string[0];
-        string[] tagValues = new string[0];
+        var nodeName = "";
+        var tagName = "";
+        var tagValue = "";
+        var tagNames = new string[0];
+        var tagValues = new string[0];
 
-        int i = 0;
-        for (; i != input.Length; i++)
+        for (var i = 0; i != input.Length; i++)
         {
             char c = input[i];
             string pos = "";
@@ -281,15 +313,15 @@ public class UdonXML : UdonSharpBehaviour
                     tagName = "";
                     tagValue = "";
 
-                    object[] s = FindCurrentLevel(data, position);
+                    var s = FindCurrentLevel(data, position);
                     position = AddLastToIntegerArray(position, ((object[]) s[2]).Length);
 
                     s[2] = AddLastToObjectArray((object[]) s[2], GenerateEmptyStruct());
-                    object[] children = (object[]) s[2];
-                    object[] child = (object[]) children[children.Length - 1];
+                    var children = (object[]) s[2];
+                    var child = (object[]) children[children.Length - 1];
 
                     child[0] = nodeName;
-                    object[] attr = (object[]) child[1];
+                    var attr = (object[]) child[1];
                     attr[0] = tagNames;
                     attr[1] = tagValues;
 
@@ -367,35 +399,30 @@ public class UdonXML : UdonSharpBehaviour
 
     private string Serialize(object[] data, string padding)
     {
-        string output = "";
+        var output = "";
 
-        object[] work = new object[0];
+        var work = new object[0];
         var current = data;
 
         var nodeChildren = (object[]) current[2];
         // Add all current children
         foreach (object o in nodeChildren)
         {
-            work = AddLastToObjectArray(work, new object[] {o, 0});
+            work = AddLastToObjectArray(work, new[] {o, 0});
         }
-
-        string nodeName, nodeValue, tagList;
-        object[] node, nodeTags, tagNames, tagValues;
-        int level;
-        object[] tempData;
 
         while (work.Length != 0)
         {
             current = (object[]) work[0];
-            node = (object[]) current[0];
-            level = (int) current[1];
+            var node = (object[]) current[0];
+            var level = (int) current[1];
             work = RemoveFirstObjectArray(work);
-            nodeName = (string) node[0];
-            nodeTags = (object[]) node[1];
-            tagNames = (object[]) nodeTags[0];
-            tagValues = (object[]) nodeTags[1];
+            var nodeName = (string) node[0];
+            var nodeTags = (object[]) node[1];
+            var tagNames = (object[]) nodeTags[0];
+            var tagValues = (object[]) nodeTags[1];
             nodeChildren = (object[]) node[2];
-            nodeValue = (string) node[3];
+            var nodeValue = (string) node[3];
 #if DEBUG
             Debug.Log("[UdonXML] [Save] Work: " + nodeName + " " + level);
 #endif
@@ -407,14 +434,14 @@ public class UdonXML : UdonSharpBehaviour
             }
 
             // Add indentation
-            for (int i = 0; i != level; i++)
+            for (var i = 0; i != level; i++)
             {
                 output += padding;
             }
 
             // Compile tags list
-            tagList = "";
-            for (int i = 0; i != tagNames.Length; i++)
+            var tagList = "";
+            for (var i = 0; i != tagNames.Length; i++)
             {
                 tagList += " " + tagNames[i] + "=\"" + tagValues[i] + "\"";
             }
@@ -446,7 +473,7 @@ public class UdonXML : UdonSharpBehaviour
                 output += $"<{nodeName}{tagList}>";
                 if (nodeChildren[0] != null)
                 {
-                    tempData = GenerateEmptyStruct();
+                    var tempData = GenerateEmptyStruct();
                     tempData[0] = "/" + nodeName;
                     tempData[2] = new object[] {null};
                     work = AddFirstToObjectArray(work, new object[] {tempData, level});
@@ -454,12 +481,12 @@ public class UdonXML : UdonSharpBehaviour
             }
 
             // Add all current children
-            for (int i = nodeChildren.Length - 1; i >= 0; i--)
+            for (var i = nodeChildren.Length - 1; i >= 0; i--)
             {
                 var o = nodeChildren[i];
                 if (o != null)
                 {
-                    work = AddFirstToObjectArray(work, new object[] {o, level + 1});
+                    work = AddFirstToObjectArray(work, new[] {o, level + 1});
                 }
             }
         }
@@ -540,6 +567,55 @@ public class UdonXML : UdonSharpBehaviour
     }
 
     /**
+     * Creates a new child node under the current given node.
+     *
+     * Returns the newly created node.
+     */
+    public object CreateChildNode(object data, string nodeName)
+    {
+        var newChild = GenerateEmptyStruct();
+        newChild[0] = nodeName;
+        var d = (object[]) data;
+        d[2] = AddLastToObjectArray((object[]) d[2], newChild);
+        return newChild;
+    }
+
+    /**
+     * Removes a child node from the current node by given index.
+     *
+     * Returns the deleted node.
+     */
+    public object RemoveChildNode(object data, int index)
+    {
+        var d = (object[]) data;
+        var old = ((object[]) d[2])[index];
+        d[2] = RemoveIndexObjectArray((object[]) d[2], index);
+        return old;
+    }
+
+    /**
+     * Removes a child node from the current node by given name. If multiple nodes exist with the same name then only the first one is deleted.
+     *
+     * Returns the deleted node, or null if not found.
+     */
+    public object RemoveChildNodeByName(object data, string nodeName)
+    {
+        var d = (object[]) data;
+        var children = (object[]) d[2];
+        for (var i = 0; i != children.Length; i++)
+        {
+            var old = (object[]) children[i];
+            if ((string) old[0] == nodeName)
+            {
+                d[2] = RemoveIndexObjectArray(children, i);
+                return old;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Returns the type-name of the node.
      */
     public string GetNodeName(object data)
@@ -548,11 +624,27 @@ public class UdonXML : UdonSharpBehaviour
     }
 
     /**
+     * Sets the name of the node.
+     */
+    public void SetNodeName(object data, string newName)
+    {
+        ((object[]) data)[0] = newName;
+    }
+
+    /**
      * Returns the value of the node.
      */
     public string GetNodeValue(object data)
     {
         return (string) ((object[]) data)[3];
+    }
+
+    /**
+     * Sets the value of the node.
+     */
+    public void SetNodeValue(object data, string newValue)
+    {
+        ((object[]) data)[3] = newValue;
     }
 
     /**
@@ -592,5 +684,55 @@ public class UdonXML : UdonSharpBehaviour
         }
 
         return null;
+    }
+
+    /**
+     * Sets the value of an attribute on given node.
+     *
+     * Returns false if the attribute already existed, returns true if attribute was created. 
+     */
+    public bool SetAttribute(object data, string attrName, string newValue)
+    {
+        var attr = (object[]) ((object[]) data)[1];
+        var tagNames = (string[]) attr[1];
+        var tagValues = (string[]) attr[1];
+
+        for (var i = 0; i != tagNames.Length; i++)
+        {
+            if (tagNames[i] == attrName)
+            {
+                tagValues[i] = newValue;
+                return false;
+            }
+        }
+
+        // This only executes if it wasn't already found
+        attr[0] = AddLastToStringArray(tagNames, attrName);
+        attr[1] = AddLastToStringArray(tagValues, newValue);
+        return true;
+    }
+
+    /**
+     * Removes an attribute by name in the given node.
+     *
+     * Returns true if attribute was deleted, false if it did not exist.
+     */
+    public bool RemoveAttribute(object data, string attrName)
+    {
+        var attr = (object[]) ((object[]) data)[1];
+        var tagNames = (string[]) attr[1];
+        var tagValues = (string[]) attr[1];
+
+        for (var i = 0; i != tagNames.Length; i++)
+        {
+            if (tagNames[i] == attrName)
+            {
+                attr[0] = RemoveIndexStringArray(tagNames, i);
+                attr[1] = RemoveIndexStringArray(tagValues, i);
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -604,7 +604,7 @@ public class UdonXMLTest : UdonSharpBehaviour
             Debug.Log("ROOT WAS NULL!!");
             return;
         }
-        
+
         /*for (var i1 = 0; i1 != udonXml.GetChildNodesCount(root); i1++)
         {
             var level1 = udonXml.GetChildNode(root, i1);

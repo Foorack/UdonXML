@@ -130,6 +130,40 @@ Returns whether the node has a given attribute or not.
 Returns the value of the attribute by given name.
 
 
+### Writing data
+
+#### 🟠 object CreateChildNode(object data, string nodeName)
+Creates a new child node under the current given node.
+
+Returns the newly created node.
+
+#### 🟠 object RemoveChildNode(object data, int index)
+Removes a child node from the current node by given index.
+
+Returns the deleted node.
+
+#### 🟠 object RemoveChildNode(object data, string nodeName)
+Removes a child node from the current node by given name.
+If multiple nodes exist with the same name then only the first one is deleted.
+
+Returns the deleted node, or null if not found.
+
+#### 🟠 void SetNodeName(object data, string newName)
+Sets the name of the node.
+
+#### 🟠 void SetNodeValue(object data, string newValue)
+Sets the value of the node.
+
+#### 🟠 void SetAttribute(object data, string attrName, string newValue)
+Sets the value of an attribute on given node.
+
+Returns false if the attribute already existed, returns true if attribute was created.
+
+#### 🟠 bool RemoveAttribute(object data, string attrName)
+Removes an attribute by name in the given node.
+
+Returns true if attribute was deleted, false if it did not exist.
+
 ## 🚛 Roadmap
 
 * Parsing from in-memory back to an XML document.
