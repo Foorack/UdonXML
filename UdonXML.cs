@@ -197,16 +197,9 @@ public class UdonXML : UdonSharpBehaviour
 
         var current = data;
 
-#if DEBUG
-        Debug.Log("FCL Start");
-#endif
-
         // [ 1, 0, 1]
         while (position.Length != 0)
         {
-#if DEBUG
-            Debug.Log("FCL: " + position[0] + " " + ((object[]) current[2]).Length);
-#endif
             current = (object[]) ((object[]) current[2])[position[0]];
             position = RemoveFirstIntegerArray(position);
         }
@@ -370,6 +363,15 @@ public class UdonXML : UdonSharpBehaviour
                     if (c == ' ' && !hasNodeNameEnded)
                     {
                         hasNodeNameEnded = true;
+                        var nodeNameLow = nodeName.ToLower();
+                        if (nodeNameLow == "area" || nodeNameLow == "base" || nodeNameLow == "br" ||
+                            nodeNameLow == "embed" || nodeNameLow == "hr" || nodeNameLow == "iframe" ||
+                            nodeNameLow == "img" || nodeNameLow == "input" || nodeNameLow == "link" ||
+                            nodeNameLow == "meta" || nodeNameLow == "param" || nodeNameLow == "source" ||
+                            nodeNameLow == "track")
+                        {
+                            isSelfClosingNode = true;
+                        }
                     }
 
                     if (hasNodeNameEnded)
@@ -458,11 +460,7 @@ public class UdonXML : UdonSharpBehaviour
             var tagList = "";
             for (var i = 0; i != tagNames.Length; i++)
             {
-                var tagValue = (string) tagValues[i];
-                Debug.Log(tagValue);
-                Debug.Log((tagValue == null) + " " + (null == tagValue));
-                Debug.Log("");
-                if (null == tagValue)
+                if (null == tagValues[i])
                 {
                     // Tags without value, such as bordered in table, or html in doctype
                     tagList += " " + tagNames[i];
@@ -477,17 +475,23 @@ public class UdonXML : UdonSharpBehaviour
             {
                 if (nodeValue.Trim().Length == 0)
                 {
-                    if (nodeName == "?xml")
+                    var nodeNameLow = nodeName.ToLower();
+                    switch (nodeNameLow)
                     {
-                        output += $"<{nodeName}{tagList}?>"; // ?xml has an extra ? at the end
-                    }
-                    else if (nodeName.ToUpper() == "!DOCTYPE")
-                    {
-                        output += $"<{nodeName}{tagList}>"; // doc types are self closing without the usual slash
-                    }
-                    else
-                    {
-                        output += $"<{nodeName}{tagList} />";
+                        // ?xml has an extra ? at the end
+                        case "?xml":
+                            output += $"<{nodeName}{tagList}?>";
+                            break;
+                        // doc types are self closing without the usual slash
+                        case "!doctype":
+                            output += $"<{nodeName}{tagList}>";
+                            break;
+                        case "!--":
+                            output += $"<{nodeName}{tagList} -->";
+                            break;
+                        default:
+                            output += $"<{nodeName}{tagList} />";
+                            break;
                     }
                 }
                 else
