@@ -381,7 +381,21 @@ public class UdonXML : UdonSharpBehaviour
                         }
                         else
                         {
-                            tagName += c + "";
+                            // i.e. bordered in <table>, or html in <doctype>, sometimes they don't have values
+                            if (c == ' ')
+                            {
+                                // Add tag
+                                if (tagName.Trim().Length != 0)
+                                {
+                                    tagNames = AddLastToStringArray(tagNames, tagName.Trim());
+                                    tagValues = AddLastToStringArray(tagValues, null);
+                                    tagName = "";
+                                }
+                            }
+                            else
+                            {
+                                tagName += c + "";
+                            }
                         }
                     }
                     else
@@ -444,7 +458,19 @@ public class UdonXML : UdonSharpBehaviour
             var tagList = "";
             for (var i = 0; i != tagNames.Length; i++)
             {
-                tagList += " " + tagNames[i] + "=\"" + tagValues[i] + "\"";
+                var tagValue = (string) tagValues[i];
+                Debug.Log(tagValue);
+                Debug.Log((tagValue == null) + " " + (null == tagValue));
+                Debug.Log("");
+                if (null == tagValue)
+                {
+                    // Tags without value, such as bordered in table, or html in doctype
+                    tagList += " " + tagNames[i];
+                }
+                else
+                {
+                    tagList += " " + tagNames[i] + "=\"" + tagValues[i] + "\"";
+                }
             }
 
             if (nodeChildren.Length == 0)
@@ -455,7 +481,7 @@ public class UdonXML : UdonSharpBehaviour
                     {
                         output += $"<{nodeName}{tagList}?>"; // ?xml has an extra ? at the end
                     }
-                    else if (nodeName == "!DOCTYPE")
+                    else if (nodeName.ToUpper() == "!DOCTYPE")
                     {
                         output += $"<{nodeName}{tagList}>"; // doc types are self closing without the usual slash
                     }
