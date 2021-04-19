@@ -6,8 +6,8 @@ UdonXML is an XML parser written in Udon for VRChat.
 The purpose of this project is for it to be used as an API in other bigger projects.
 This work is something the average VRChatter never will notice, but something the author hopes might be beneficial and make the life easier for world/game creators in VRChat.
 
-An example use of this library is allowing the player to paste the entire contents of an XML file (e.g. game save file) into an Input field in VRC, and allowing the world to then parse the submitted data.
-Work is currently undergoing on implementing a ZIP decoder for this same purpose, please join the Discord for notification on future updates.
+An example use of this library is allowing the player to paste the entire contents of an XML file (e.g. game save file) into an Input field in VRC, and allowing the world to then parse the submitted data.dates.
+For this purpose a Zip parser library has also been implemented, which you can find [here, called UdonZip](https://github.com/Foorack/UdonZip).
 
 ## 🛠️ Setup
 
@@ -28,7 +28,7 @@ Work is currently undergoing on implementing a ZIP decoder for this same purpose
 1. Declare a `public UdonXML udonXml;` variable in your program.
 2. Assign it the value of the UdonXML GameObject in your scene.
 3. Parse your XML data with LoadXml `udonXml.LoadXml(inputData);`. It will return an object.
-4. The object returned represents the root of the xml tree, use it when executing other nodes such as `GetNodeName` or `HasChildNodes`.
+4. The object returned represents the root of the xml tree, use it when executing other API functions such as `GetNodeName` or `HasChildNodes`.
 
 ### Example demo
 

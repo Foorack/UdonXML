@@ -45,6 +45,7 @@ using UdonSharp;
 // ReSharper disable MemberCanBeMadeStatic.Global
 // ReSharper disable SuggestBaseTypeForParameter
 // ReSharper disable once InconsistentNaming
+// ReSharper disable once CheckNamespace
 public class UdonXML : UdonSharpBehaviour
 {
     /**
@@ -508,7 +509,7 @@ public class UdonXML : UdonSharpBehaviour
                     var tempData = GenerateEmptyStruct();
                     tempData[0] = "/" + nodeName;
                     tempData[2] = new object[] {null};
-                    work = AddFirstToObjectArray(work, new object[] {tempData, level});
+                    work = AddFirstToObjectArray(work, (object) new object[] {tempData, level});
                 }
             }
 
@@ -518,7 +519,7 @@ public class UdonXML : UdonSharpBehaviour
                 var o = nodeChildren[i];
                 if (o != null)
                 {
-                    work = AddFirstToObjectArray(work, new[] {o, level + 1});
+                    work = AddFirstToObjectArray(work, new [] {o, level + 1});
                 }
             }
         }
